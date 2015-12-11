@@ -1,0 +1,57 @@
+/* CSS declarations go here */
+
+body { 
+	background: #f1f1f1;	
+}
+
+.hidden_div{
+	display:none;
+}
+
+.website-list {
+	overflow-y: scroll;
+	height:91vh;
+	padding-right: 10px;
+}
+
+.website-details a {
+	color: #ee6e73;
+}
+
+.center-text {
+	text-align: center;
+}
+
+.comments-box {
+	max-width:100%;
+	overflow-y: scroll;
+
+}
+.website-item {
+	text-align: center;
+}
+
+.website-details {
+	height:91vh;
+	overflow-y: scroll;
+}
+
+#forgot-password-link {
+	color: black;
+}
+
+#signup-link {
+	color: black;
+}
+
+.card-title {
+	color: #ee6e73;
+}
+
+.card-title a {
+	color: #ee6e73;
+}
+
+nav ul a {
+	padding: 0;
+}

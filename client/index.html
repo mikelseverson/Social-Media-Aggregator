@@ -1,0 +1,201 @@
+<head>
+    <title>Meteor Project</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+</head>
+
+<body>
+</body>
+
+<template name="ApplicationLayout">
+    {{> yield "navbar"}}
+    {{> yield "sidebar"}}
+    {{> yield "main"}}
+</template>
+
+<!-- Navigation Bar -->
+<template name="navbar">
+    <nav>
+        <div class="nav-wrapper">   
+            <ul class="left">
+                {{> loginButtons}} 
+            </ul>
+            <a href="/" class="brand-logo center">SoAgg</a>
+        </div>
+    </nav>
+</template>
+
+<!-- Form to add new websites to website -->
+<template name="website_form">
+    <div id="website_form" class="hidden_div">
+        <div class="card">
+            <div class="card-content">
+                <span class="card-title">Add a website</span>
+                <form class="js-save-website-form">
+                    <div class="form-group">
+                        <label for="url">Site address</label>
+                        <input type="text" class="form-control" id="url" placeholder="http://www.mysite.com">
+                    </div>
+                    <div class="form-group">
+                        <label for="title">Title</label>
+                        <input type="text" class="form-control" id="title" placeholder="Mysite">
+                    </div>
+                    <div class="form-group">
+                        <label for="description">Description</label>
+                        <input type="text" class="form-control" id="description"
+                        placeholder="I found this site really useful for ...">
+                    </div>
+                    <button type="submit" class="btn btn-default">Submit</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</template>
+
+<!-- Template that displays website items -->
+<template name="website_list">
+    <div class="website-list col-sm-4 {{#if url}}hidden-xs{{else}}col-xs-12 {{/if}}" id="website-list">
+        {{>home_card}}
+        {{> website_form}}
+        {{#each websites}}
+            {{>website_item}}
+        {{/each}}
+    </div>
+</template>
+
+<!-- Card displayed above website_list to welcome user -->
+<template name="home_card">
+    <div class="card">
+        <div class="card-content">
+            <span class="card-title">Website updates</span><br>
+            <p>Yay! We're mobile responsive!</p>
+            {{#if loggedIn}}<button class="btn btn-default js-toggle-website-form">Add Website</button>{{/if}}
+        </div>                
+
+    </div>
+</template>
+
+<!-- Template that displays individual website entries -->
+<template name="website_item">
+    <div class="card">
+        
+        <div class="card-image waves-effect waves-block waves-light">
+            <img src='{{image}}'>
+        </div>
+
+        <div class="card-content">
+            <span class="card-title">
+                <a href="{{_id}}" class="js-details">{{title}}</a>
+            </span>
+            <p>{{description}}</p>
+            <p>{{formatDate createdOn}}</p>
+        </div>
+
+        <div class="card-action">
+            <a href="#" class="btn btn-default js-upvote waves-effect waves-green 
+            {{#if checkUpvoted}} light-green darken-3 {{else}} grey {{/if}}">
+                <span class="glyphicon glyphicon-arrow-up" aria-hidden="true">{{upvoteCount}}</span>
+            </a>
+            <a href="#" class="btn btn-default js-downvote waves-effect waves-brown 
+            {{#if checkDownvoted}} brown lighten-1 {{else}} grey {{/if}}">
+                <span class="glyphicon glyphicon-arrow-down" aria-hidden="true">{{downvoteCount}}</span>
+            </a>
+        </div>
+    </div>
+</template>
+
+<!-- Template that displays details and comments of a specific website -->
+<template name="website_detail">
+    <div class="website-details col-sm-8 {{#if url}}col-xs-12{{else}}hidden-xs{{/if}}">
+        {{#if url}}
+            <div class="card">
+                <div class="card-image waves-effect waves-block waves-light">
+                  <img src='{{image}}'>
+                </div>
+                <div class="card-content">
+                    <span class="card-title">
+                            <a href="{{url}}">{{title}}</a>
+                    </span>
+                    <p>{{description}}</p>
+                    <p>{{formatDate createdOn}}</p>
+                </div>
+                <div class="card-action">
+                    <a href="#" class="btn btn-default js-upvote waves-effect waves-green 
+                    {{#if checkUpvoted}} light-green darken-3 {{else}} grey {{/if}}">
+                        <span class="glyphicon glyphicon-arrow-up" aria-hidden="true">{{upvoteCount}}</span>
+                    </a>
+                    <a href="#" class="btn btn-default js-downvote 
+                    {{#if checkDownvoted}} brown lighten-1 {{else}} grey {{/if}}">
+                        <span class="glyphicon glyphicon-arrow-down" aria-hidden="true">{{downvoteCount}}</span>
+                    </a>
+                </div>
+            </div>
+            {{> voteDisplayCard}}
+            <div class="card">
+                <div class="card-content">
+                    <span class="card-title">Comments</span>
+                    <form class="js-add-comment-form">
+                        <input type="text" class="form-control" id="comment" placeholder="Share your thoughts...">
+                        <button type="submit" class="btn btn-default waves-effect waves-block waves-light">Send</button>
+                    </form>
+                    {{#each comments}}
+                        {{> comment}}
+                    {{else}}
+                        <div class="card">
+                            <div class="card-content">
+                                <p>No comments yet! Quick! You can be first!</p>
+                            </div>
+                        </div>
+                    {{/each}}
+                </div>
+            </div>
+        {{else}}
+            <div class="card">
+                <div class="card-content">
+                    <span class="card-title">Welcome!</span>
+                    <p>Checkout the websites the community has found on the left, and join the community by joining the discussions.</p>
+                </div>
+            </div>
+        {{/if}}
+    </div>
+</template>
+
+<!-- Vote display card -->
+<template name="voteDisplayCard">
+    <div class="row">
+        <div class="col s12 m6" style="padding: 0 5px 0 0">
+            <div class="card">
+                <div class="card-content">
+                    <span class="card-title">Upvoters</span>
+                    <div class="collection">
+                        {{#each upvoters}}
+                            <a href="#!" class="collection-item">{{this}}</a>
+                        {{/each}}
+                    </div>
+                </div>  
+            </div>
+        </div>
+        <div class="col s12 m6" style="padding: 0 0 0 5px">
+            <div class="card">
+                <div class="card-content">
+                    <span class="card-title">Downvoters</span>
+                    <div class="collection">
+                        {{#each downvoters}}
+                            <a href="#!" class="collection-item">{{this}}</a>
+                        {{/each}}
+                    </div>
+                </div>  
+            </div>
+        </div>
+    </div>
+</template>
+
+<!-- Comment -->
+<template name="comment">
+    <div class="card">
+        <div class="card-content">
+            <p>{{text}}</p>
+            <p>{{createdBy}} - {{formatDate createdOn}}</p>
+        </div>
+    </div>
+</template>
